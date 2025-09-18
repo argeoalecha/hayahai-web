@@ -1,0 +1,304 @@
+// prisma/schema.prisma - Every field designed to prevent data corruption
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified DateTime?
+  role          String    @default("USER")
+
+  // Security & audit fields
+  passwordHash     String?
+  twoFactorEnabled Boolean   @default(false)
+  loginAttempts    Int       @default(0)
+  lockedUntil      DateTime?
+
+  // Profile fields
+  bio              String?
+  website          String?
+  twitter          String?
+  github           String?
+  linkedin         String?
+
+  // Preferences
+  emailNotifications Boolean @default(true)
+  theme              String  @default("auto")
+  language           String  @default("en")
+
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  lastLoginAt      DateTime?
+  isActive         Boolean   @default(true)
+  deletedAt        DateTime? // Soft delete
+
+  // Relations with cascade protection
+  accounts         Account[]
+  sessions         Session[]
+  posts            Post[]
+  comments         Comment[]
+  activityLogs     ActivityLog[]
+
+  // Performance indexes
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+  @@index([deletedAt])
+  @@map("users")
+}
+
+model Post {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  excerpt     String?
+  content     String
+  coverImage  String?
+
+  // Content metadata with defaults
+  published   Boolean     @default(false)
+  featured    Boolean     @default(false)
+  readTime    Int         @default(0)
+  wordCount   Int         @default(0)
+
+  // Analytics with non-negative constraints
+  views       Int         @default(0)
+  likes       Int         @default(0)
+  shares      Int         @default(0)
+
+  // Required categorization
+  category    String
+  status      String      @default("DRAFT")
+
+  // SEO with length validation
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String   @default("")
+  ogImage        String?
+  canonicalUrl   String?
+
+  // Interactive features flags
+  hasMap         Boolean  @default(false)
+  hasTimeline    Boolean  @default(false)
+  hasCodeBlocks  Boolean  @default(false)
+  hasGallery     Boolean  @default(false)
+
+  // Relations with proper constraints
+  author         User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId       String
+  tags           Tag[]       @relation("PostTags")
+  comments       Comment[]
+
+  // Interactive content
+  travelLocations TravelLocation[]
+  timelineEvents  TimelineEvent[]
+  codeBlocks      CodeBlock[]
+  mediaGallery    MediaGallery[]
+  analytics       PostAnalytics[]
+
+  // Audit timestamps
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  publishedAt    DateTime?
+  deletedAt      DateTime?
+
+  // Performance indexes
+  @@index([published, publishedAt(sort: Desc)])
+  @@index([category, published])
+  @@index([featured, published])
+  @@index([slug])
+  @@index([authorId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("posts")
+}
+
+model Tag {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  slug       String   @unique
+  color      String?  // Hex color
+  usageCount Int      @default(0)
+
+  posts      Post[]   @relation("PostTags")
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([usageCount(sort: Desc)])
+  @@map("tags")
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  content    String
+  approved   Boolean  @default(false)
+
+  // Anonymous comment fields
+  authorName  String?
+  authorEmail String?
+  authorUrl   String?
+
+  // Relations
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId     String
+  author     User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorId   String?
+  parent     Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  parentId   String?
+  replies    Comment[] @relation("CommentReplies")
+
+  // Metadata
+  ipAddress  String?  // IPv6 support
+  userAgent  String?
+
+  // Timestamps
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deletedAt  DateTime?
+
+  @@index([postId, approved, deletedAt])
+  @@index([authorId])
+  @@index([parentId])
+  @@map("comments")
+}
+
+model TravelLocation {
+  id        String  @id @default(cuid())
+  name      String
+  latitude  Float
+  longitude Float
+  address   String?
+
+  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+
+  @@index([postId])
+  @@map("travel_locations")
+}
+
+model TimelineEvent {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  date        DateTime
+  order       Int
+
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      String
+
+  @@index([postId, order])
+  @@map("timeline_events")
+}
+
+model CodeBlock {
+  id       String @id @default(cuid())
+  title    String
+  language String
+  code     String
+  order    Int
+
+  post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   String
+
+  @@index([postId, order])
+  @@map("code_blocks")
+}
+
+model MediaGallery {
+  id       String @id @default(cuid())
+  url      String
+  alt      String
+  caption  String?
+  order    Int
+  type     String // image, video
+
+  post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   String
+
+  @@index([postId, order])
+  @@map("media_gallery")
+}
+
+model PostAnalytics {
+  id         String   @id @default(cuid())
+  date       DateTime
+  views      Int      @default(0)
+  uniqueViews Int     @default(0)
+
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId     String
+
+  @@unique([postId, date])
+  @@index([date])
+  @@map("post_analytics")
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  action     String
+  resource   String
+  resourceId String?
+  details    String?  // JSON as string for SQLite
+  ipAddress  String?
+  userAgent  String?
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([action])
+  @@index([resource])
+  @@map("activity_logs")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
