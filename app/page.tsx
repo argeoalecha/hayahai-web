@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/Button'
-import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
+// Temporarily use simple components for deployment
+// import { Button } from '@/components/ui/Button'
+// import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 
 export default function Home() {
   return (
@@ -20,71 +21,65 @@ export default function Home() {
             Zero-tolerance error prevention blog platform
           </p>
 
-          <ErrorBoundary level="component">
-            <div className="flex gap-4 justify-center">
-              <Button>Get Started</Button>
-              <Button variant="outline">Learn More</Button>
-            </div>
-          </ErrorBoundary>
+          <div className="flex gap-4 justify-center">
+            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Get Started
+            </button>
+            <button className="px-6 py-3 bg-transparent text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+              Learn More
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <ErrorBoundary level="section">
-          <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
-            <h2 className="mb-3 text-2xl font-semibold">
-              Error Prevention{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className="m-0 max-w-[30ch] text-sm opacity-50">
-              Multi-layer error prevention with comprehensive validation and fallbacks.
-            </p>
-          </div>
-        </ErrorBoundary>
+        <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
+          <h2 className="mb-3 text-2xl font-semibold">
+            Error Prevention{' '}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+              →
+            </span>
+          </h2>
+          <p className="m-0 max-w-[30ch] text-sm opacity-50">
+            Multi-layer error prevention with comprehensive validation and fallbacks.
+          </p>
+        </div>
 
-        <ErrorBoundary level="section">
-          <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
-            <h2 className="mb-3 text-2xl font-semibold">
-              Type Safety{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className="m-0 max-w-[30ch] text-sm opacity-50">
-              TypeScript strict mode with comprehensive type definitions.
-            </p>
-          </div>
-        </ErrorBoundary>
+        <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
+          <h2 className="mb-3 text-2xl font-semibold">
+            Type Safety{' '}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+              →
+            </span>
+          </h2>
+          <p className="m-0 max-w-[30ch] text-sm opacity-50">
+            TypeScript strict mode with comprehensive type definitions.
+          </p>
+        </div>
 
-        <ErrorBoundary level="section">
-          <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
-            <h2 className="mb-3 text-2xl font-semibold">
-              Resilient DB{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className="m-0 max-w-[30ch] text-sm opacity-50">
-              Connection pooling, retry logic, and transaction management.
-            </p>
-          </div>
-        </ErrorBoundary>
+        <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
+          <h2 className="mb-3 text-2xl font-semibold">
+            Resilient DB{' '}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+              →
+            </span>
+          </h2>
+          <p className="m-0 max-w-[30ch] text-sm opacity-50">
+            Connection pooling, retry logic, and transaction management.
+          </p>
+        </div>
 
-        <ErrorBoundary level="section">
-          <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
-            <h2 className="mb-3 text-2xl font-semibold">
-              Monitoring{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className="m-0 max-w-[30ch] text-sm opacity-50">
-              Real-time error tracking and performance monitoring.
-            </p>
-          </div>
-        </ErrorBoundary>
+        <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
+          <h2 className="mb-3 text-2xl font-semibold">
+            Monitoring{' '}
+            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+              →
+            </span>
+          </h2>
+          <p className="m-0 max-w-[30ch] text-sm opacity-50">
+            Real-time error tracking and performance monitoring.
+          </p>
+        </div>
       </div>
     </main>
   )
