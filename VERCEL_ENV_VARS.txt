@@ -1,0 +1,73 @@
+=================================================================
+VERCEL ENVIRONMENT VARIABLES - QUICK REFERENCE
+Hayah-AI Blog Platform - Staging Deployment
+=================================================================
+
+COPY THESE TO VERCEL DASHBOARD:
+Project → Settings → Environment Variables → Add each one
+
+-----------------------------------------------------------------
+REQUIRED VARIABLES (Must add before deployment):
+-----------------------------------------------------------------
+
+1. DATABASE_URL
+   Value: [Copy POSTGRES_PRISMA_URL from Vercel Postgres]
+   Example: postgres://default:xxx@xxx-pooler.postgres.vercel-storage.com:5432/verceldb?pgbouncer=true&sslmode=require
+
+2. POSTGRES_URL_NON_POOLING
+   Value: [Copy from Vercel Postgres]
+   Example: postgres://default:xxx@xxx.postgres.vercel-storage.com:5432/verceldb?sslmode=require
+
+3. NEXTAUTH_URL
+   Value: https://your-app-name.vercel.app
+   Note: Update this after first deployment with actual URL
+
+4. NEXTAUTH_SECRET
+   Value: 9a9d424b46c81a6bd43cd36fdb752876f1c0f1f5e9c9988c3a3a092a32742326
+
+5. NODE_ENV
+   Value: production
+
+-----------------------------------------------------------------
+OPTIONAL VARIABLES (Can add later):
+-----------------------------------------------------------------
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+SENTRY_DSN=
+UPLOADTHING_SECRET=
+UPLOADTHING_APP_ID=
+RESEND_API_KEY=
+FROM_EMAIL=noreply@hayah-ai.com
+ENABLE_COMMENTS=true
+ENABLE_ANALYTICS=true
+
+-----------------------------------------------------------------
+HOW TO GET POSTGRES VALUES:
+-----------------------------------------------------------------
+
+1. In Vercel Dashboard → Your Project → Storage tab
+2. Click on your Postgres database
+3. Go to ".env.local" tab
+4. Copy the values shown:
+   - POSTGRES_PRISMA_URL → use for DATABASE_URL
+   - POSTGRES_URL_NON_POOLING → use as-is
+
+-----------------------------------------------------------------
+DEPLOYMENT CHECKLIST:
+-----------------------------------------------------------------
+
+[ ] Created Vercel Postgres database
+[ ] Copied POSTGRES_PRISMA_URL to DATABASE_URL
+[ ] Copied POSTGRES_URL_NON_POOLING
+[ ] Added NEXTAUTH_SECRET
+[ ] Added NODE_ENV=production
+[ ] Added placeholder NEXTAUTH_URL
+[ ] Triggered deployment
+[ ] Updated NEXTAUTH_URL with actual deployment URL
+[ ] Redeployed with correct URL
+[ ] Tested /api/health endpoint
+
+=================================================================
