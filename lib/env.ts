@@ -16,19 +16,19 @@ const envSchema = z.object({
   GITHUB_CLIENT_ID: z.string().optional(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
 
-  // File upload services
-  UPLOADTHING_SECRET: z.string().min(1, "UploadThing secret required"),
-  UPLOADTHING_APP_ID: z.string().min(1, "UploadThing app ID required"),
+  // File upload services (optional)
+  UPLOADTHING_SECRET: z.string().optional(),
+  UPLOADTHING_APP_ID: z.string().optional(),
 
-  // Email services
-  RESEND_API_KEY: z.string().min(1, "Resend API key required"),
-  FROM_EMAIL: z.string().email("Invalid from email"),
+  // Email services (optional)
+  RESEND_API_KEY: z.string().optional(),
+  FROM_EMAIL: z.string().optional(),
 
-  // Analytics
-  GOOGLE_ANALYTICS_ID: z.string().regex(/^G-[A-Z0-9]+$/, "Invalid GA4 ID").optional(),
+  // Analytics (optional)
+  GOOGLE_ANALYTICS_ID: z.string().optional(),
 
-  // Error tracking
-  SENTRY_DSN: z.string().url().optional(),
+  // Error tracking (optional)
+  SENTRY_DSN: z.string().optional(),
 
   // Environment
   NODE_ENV: z.enum(['development', 'production', 'test']),
