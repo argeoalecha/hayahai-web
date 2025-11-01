@@ -58,12 +58,12 @@
     "zustand": "^4.4.7",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.18"
+    "tailwindcss": "^3.4.18",
+    "@tailwindcss/typography": "^0.5.10"
   },
   "devDependencies": {
     "@lhci/cli": "^0.12.0",
     "@playwright/test": "^1.55.0",
-    "@tailwindcss/typography": "^0.5.10",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
     "@types/leaflet": "^1.9.20",
