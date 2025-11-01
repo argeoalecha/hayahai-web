@@ -3,7 +3,7 @@ import { z } from 'zod';
 // Environment validation schema
 const envSchema = z.object({
   // Core configuration
-  NODE_ENV: z.enum(['development', 'staging', 'production']).default('development'),
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   NEXTAUTH_URL: z.string().url(),
   NEXTAUTH_SECRET: z.string().min(32),
 
@@ -12,24 +12,24 @@ const envSchema = z.object({
   DIRECT_URL: z.string().url().optional(),
 
   // Authentication providers
-  GOOGLE_CLIENT_ID: z.string().optional(),
-  GOOGLE_CLIENT_SECRET: z.string().optional(),
-  GITHUB_CLIENT_ID: z.string().optional(),
-  GITHUB_CLIENT_SECRET: z.string().optional(),
-  DISCORD_CLIENT_ID: z.string().optional(),
-  DISCORD_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_CLIENT_ID: z.string().default(''),
+  GOOGLE_CLIENT_SECRET: z.string().default(''),
+  GITHUB_CLIENT_ID: z.string().default(''),
+  GITHUB_CLIENT_SECRET: z.string().default(''),
+  DISCORD_CLIENT_ID: z.string().default(''),
+  DISCORD_CLIENT_SECRET: z.string().default(''),
 
   // File upload
-  UPLOADTHING_SECRET: z.string().optional(),
-  UPLOADTHING_APP_ID: z.string().optional(),
+  UPLOADTHING_SECRET: z.string().optional().or(z.literal('')),
+  UPLOADTHING_APP_ID: z.string().optional().or(z.literal('')),
 
   // Email
-  RESEND_API_KEY: z.string().optional(),
-  FROM_EMAIL: z.string().email().optional(),
+  RESEND_API_KEY: z.string().optional().or(z.literal('')),
+  FROM_EMAIL: z.string().optional().or(z.literal('')),
 
   // Monitoring
-  SENTRY_DSN: z.string().url().optional(),
-  GOOGLE_ANALYTICS_ID: z.string().optional(),
+  SENTRY_DSN: z.string().optional().or(z.literal('')),
+  GOOGLE_ANALYTICS_ID: z.string().optional().or(z.literal('')),
 
   // Alerting
   SLACK_WEBHOOK_DB: z.string().url().optional(),
@@ -65,7 +65,15 @@ const envSchema = z.object({
 });
 
 // Validate and export environment variables
-export const env = envSchema.parse(process.env);
+// Note: Using safeParse to preserve optional fields in the type
+const result = envSchema.safeParse(process.env);
+
+if (!result.success) {
+  console.error('Environment validation failed:', result.error.format());
+  throw new Error('Invalid environment variables');
+}
+
+export const env = result.data;
 
 // Type for environment variables
 export type Env = z.infer<typeof envSchema>;
